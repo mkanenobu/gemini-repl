@@ -1,6 +1,6 @@
-import type { Message } from "gemini-ai";
+import type { Content } from "@google/generative-ai";
 
 export type REPLContext = {
   systemMessage?: string;
-  messages: Array<Message>;
+  contents: Array<Content>;
 };

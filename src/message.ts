@@ -1,22 +1,15 @@
-import type { Message } from "gemini-ai";
+import type { Content } from "@google/generative-ai";
 
-export const createSystemMessage = (content: string): Message => {
-  return {
-    role: "system",
-    parts: [{ text: content }],
-  };
-};
-
-export const createUserMessage = (content: string): Message => {
-  return {
-    role: "user",
-    parts: [{ text: content }],
-  };
-};
-
-export const createAssistantMessage = (content: string): Message => {
+export const createModelMessage = (content: string): Content => {
   return {
     role: "model",
+    parts: [{ text: content }],
+  };
+};
+
+export const createUserMessage = (content: string): Content => {
+  return {
+    role: "user",
     parts: [{ text: content }],
   };
 };

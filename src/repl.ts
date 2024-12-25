@@ -2,7 +2,6 @@ import * as repl from "node:repl";
 import { createEvaluator } from "./evaluator.ts";
 import { type Config, historyPath } from "./config.ts";
 import type { REPLContext } from "./repl-context.ts";
-import { createSystemMessage } from "./message.ts";
 
 const prompt = "> ";
 
@@ -16,7 +15,7 @@ const getCommands = ({
   return {
     clear: {
       action() {
-        context.messages = [];
+        context.contents = [];
         console.log("History cleared");
 
         this.displayPrompt();
@@ -27,7 +26,7 @@ const getCommands = ({
       action() {
         console.log(
           JSON.stringify(
-            [context.systemMessage, ...context.messages].filter((m) => !!m),
+            [context.systemMessage, ...context.contents].filter((m) => !!m),
             undefined,
             2,
           ),
@@ -59,7 +58,7 @@ const getCommands = ({
 
 export const startRepl = async ({ config }: { config: Config }) => {
   const context: REPLContext = {
-    messages: [],
+    contents: [],
     systemMessage: config.systemContext,
   };
   const evaluator = createEvaluator(config, context);

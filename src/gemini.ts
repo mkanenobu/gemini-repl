@@ -1,28 +1,31 @@
-import Gemini, { type Message } from "gemini-ai";
+import { GoogleGenerativeAI, type Content } from "@google/generative-ai";
 
-let geminiClient: Gemini;
-const init = (apiKey: string): Gemini => {
-  if (geminiClient) return geminiClient;
+let client: GoogleGenerativeAI;
+const init = (apiKey: string) => {
+  if (client) return client;
 
-  geminiClient = new Gemini(apiKey);
-  return geminiClient;
+  client = new GoogleGenerativeAI(apiKey);
+  return client;
 };
 
 export const createChatStream = async ({
   apiKey,
   model,
-  messages,
+  contents,
   systemInstruction,
 }: {
   apiKey: string;
   model: string;
-  messages: Array<Message>;
+  contents: Array<Content>;
   systemInstruction?: string;
 }) => {
   const client = init(apiKey);
-  return client.createChat({
+  const generativeModel = client.getGenerativeModel({
     model,
-    messages,
+  });
+
+  return generativeModel.generateContentStream({
+    contents,
     systemInstruction,
   });
 };
