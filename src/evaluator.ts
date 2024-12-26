@@ -26,7 +26,10 @@ export const createEvaluator = (config: Config, ctx: REPLContext): REPLEval => {
       });
 
       let responseBuf = "";
-      for await (const chunk of smoothCharGenerator(stream.stream, 5)) {
+      for await (const chunk of smoothCharGenerator(
+        stream.stream,
+        config.printIntervalMs,
+      )) {
         if (chunk) {
           // Stop spinner after first response
           spinner.isSpinning && spinner.stop();
@@ -49,7 +52,7 @@ export const createEvaluator = (config: Config, ctx: REPLContext): REPLEval => {
 
 async function* smoothCharGenerator(
   input: Awaited<ReturnType<typeof createChatStream>>["stream"],
-  delay = 5,
+  delay: number,
 ) {
   for await (const chunk of input) {
     const chunkContent =

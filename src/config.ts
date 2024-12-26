@@ -6,6 +6,7 @@ export const configSchema = z.object({
   apiKey: z.string(),
   systemContext: z.string().optional(),
   model: z.string().optional().default("gemini-1.5-flash"),
+  printIntervalMs: z.number().optional().default(6),
 });
 
 export type Config = z.infer<typeof configSchema>;
