@@ -18,28 +18,26 @@ export const createEvaluator = (config: Config, ctx: REPLContext): REPLEval => {
     const spinner = newSpinner().start();
 
     try {
-      const stream = await createChatStream({
+      const res = await createChatStream({
         model: config.model,
         apiKey: config.apiKey,
         contents: ctx.contents,
         systemInstruction: config.systemContext,
       });
 
-      let responseBuf = "";
-      for await (const chunk of smoothCharGenerator(
-        stream.stream,
+      for await (const chunk of smoothRuneGenerator(
+        res.stream,
         config.printIntervalMs,
       )) {
         if (chunk) {
           // Stop spinner after first response
           spinner.isSpinning && spinner.stop();
-
-          responseBuf += chunk;
           process.stdout.write(chunk);
         }
       }
 
-      ctx.contents.push(createModelMessage(responseBuf));
+      const responseContent = (await res.response).text();
+      ctx.contents.push(createModelMessage(responseContent));
 
       spinner.stop();
       return this.displayPrompt();
@@ -50,7 +48,7 @@ export const createEvaluator = (config: Config, ctx: REPLContext): REPLEval => {
   };
 };
 
-async function* smoothCharGenerator(
+async function* smoothRuneGenerator(
   input: Awaited<ReturnType<typeof createChatStream>>["stream"],
   delay: number,
 ) {
