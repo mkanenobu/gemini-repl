@@ -22,11 +22,11 @@ const getCommands = ({
       },
       help: "Clears the chat history",
     },
-    messages: {
+    contents: {
       action() {
         console.log(
           JSON.stringify(
-            [context.systemMessage, ...context.contents].filter((m) => !!m),
+            context.contents.filter((m) => !!m),
             undefined,
             2,
           ),
